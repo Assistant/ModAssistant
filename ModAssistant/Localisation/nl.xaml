@@ -19,6 +19,7 @@
     <sys:String x:Key="MainWindow:ModsButton">Mods</sys:String>
     <sys:String x:Key="MainWindow:AboutButton">Over</sys:String>
     <sys:String x:Key="MainWindow:OptionsButton">Opties</sys:String>
+    <sys:String x:Key="MainWindow:PlayButton">Speel!</sys:String>
     <sys:String x:Key="MainWindow:GameVersionLabel">Game Versie</sys:String>
     <sys:String x:Key="MainWindow:VersionLabel">Versie</sys:String>
     <sys:String x:Key="MainWindow:ModInfoButton">Mod Info</sys:String>

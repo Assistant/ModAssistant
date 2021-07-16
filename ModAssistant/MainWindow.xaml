@@ -136,6 +136,22 @@
                         </Viewbox>
                     </StackPanel>
                 </Button>
+                
+                <Button
+                    Name="PlayButton"
+                    Grid.Row="4"
+                    Margin="0,0,10,0"
+                    Click="PlayButton_Click"
+                    Style="{DynamicResource MainPageButton}" Height="30" VerticalAlignment="Bottom">
+                    <StackPanel Margin="0,0,0,0">
+                        <Viewbox Stretch="Uniform" Height="25">
+                            <TextBlock
+                            HorizontalAlignment="Center"
+                            Padding="2,0,2,0"
+                            Text="{DynamicResource MainWindow:PlayButton}" />
+                        </Viewbox>
+                    </StackPanel>
+                </Button>
 
                 <StackPanel
                     Name="GameVersions"

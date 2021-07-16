@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -265,6 +267,28 @@ namespace ModAssistant
             Themes.LoadThemes();
             Properties.Settings.Default.LastTab = "Options";
             Properties.Settings.Default.Save();
+        }
+
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Options.Instance.InstallType == "Steam")
+            {
+                Process.Start("steam://rungameid/620980");
+            }
+            else
+            {
+                string exePath = Path.Combine(Options.Instance.InstallDirectory, "Beat Saber.exe");
+
+                Process process = new Process()
+                {
+                    StartInfo = new ProcessStartInfo(exePath)
+                    {
+                        WorkingDirectory = Path.GetDirectoryName(exePath)
+                    }
+                };
+
+                process.Start();
+            }
         }
 
         private void InstallButton_Click(object sender, RoutedEventArgs e)
