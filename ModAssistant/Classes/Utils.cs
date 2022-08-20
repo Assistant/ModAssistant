@@ -386,14 +386,14 @@ namespace ModAssistant
         public static bool IsVoid()
         {
             string directory = App.BeatSaberInstallDirectory;
-            string pluginsDirectory = Path.Combine(directory, "Beat Saber_Data", "Plugins");
+            string pluginsDirectory = Path.Combine(directory, "Beat Saber_Data", "Plugins", "x86_64"); // newer version of bs use x86_64 for plugins folder
 
             if (File.Exists(Path.Combine(directory, "IGG-GAMES.COM.url")) ||
                 File.Exists(Path.Combine(directory, "SmartSteamEmu.ini")) ||
                 File.Exists(Path.Combine(directory, "GAMESTORRENT.CO.url")) ||
                 File.Exists(Path.Combine(pluginsDirectory, "BSteam crack.dll")) ||
                 File.Exists(Path.Combine(pluginsDirectory, "HUHUVR_steam_api64.dll")) ||
-                Directory.GetFiles(pluginsDirectory, "*.ini", SearchOption.TopDirectoryOnly).Where(x => Path.GetFileName(x) != "desktop.ini").Any())
+                Directory.GetFiles(pluginsDirectory, "*.ini", SearchOption.TopDirectoryOnly).Where(x => Path.GetFileName(x).ToLower() != "desktop.ini").Any())
                 return true;
             return false;
         }
