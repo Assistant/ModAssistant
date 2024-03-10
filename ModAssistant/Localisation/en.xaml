@@ -91,6 +91,12 @@
     <sys:String x:Key="Mods:UninstallButton">Uninstall</sys:String>
     <sys:String x:Key="Mods:LoadFailed">Could not load mods list</sys:String>
     <sys:String x:Key="Mods:CheckingInstalledMods">Checking installed mods</sys:String>
+    <sys:String x:Key="Mods:GameUpdatedPrompt:Title">Reselect mods?</sys:String>
+    <sys:String x:Key="Mods:GameUpdatedPrompt:OkCancel">The game has updated since you last modded, would you like to automatically re-select the mods you had installed previously?</sys:String>
+    <sys:String x:Key="Mods:FailedToSelect:Title">Failed to select {0} mods</sys:String>
+    <sys:String x:Key="Mods:FailedToSelect:Body1">The following mods could not be found and weren't selected:</sys:String>
+    <sys:String x:Key="Mods:FailedToSelect:Body2">These mods might not be updated for the current game version.</sys:String>
+    <sys:String x:Key="Mods:CheckingPreviousMods">Checking previously installed mods</sys:String>
     <sys:String x:Key="Mods:LoadingMods">Loading Mods</sys:String>
     <sys:String x:Key="Mods:FinishedLoadingMods">Finished loading mods</sys:String>
     <sys:String x:Key="Mods:NoMods">No mods available for this version of Beat Saber</sys:String>

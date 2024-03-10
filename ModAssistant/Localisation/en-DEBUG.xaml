@@ -60,6 +60,12 @@
     <sys:String x:Key="Mods:UninstallButton">Mods:UninstallButton</sys:String>
     <sys:String x:Key="Mods:LoadFailed">Mods:LoadFailed</sys:String>
     <sys:String x:Key="Mods:CheckingInstalledMods">Mods:CheckingInstalledMods</sys:String>
+    <sys:String x:Key="Mods:GameUpdatedPrompt:Title">Mods:GameUpdatedPrompt:Title</sys:String>
+    <sys:String x:Key="Mods:GameUpdatedPrompt:OkCancel">Mods:GameUpdatedPrompt:OkCancel</sys:String>
+    <sys:String x:Key="Mods:FailedToSelect:Title">Mods:FailedToSelect:Title</sys:String>
+    <sys:String x:Key="Mods:FailedToSelect:Body1">Mods:FailedToSelect:Body1</sys:String>
+    <sys:String x:Key="Mods:FailedToSelect:Body2">Mods:FailedToSelect:Body2</sys:String>
+    <sys:String x:Key="Mods:CheckingPreviousMods">Mods:CheckingPreviousMods</sys:String>
     <sys:String x:Key="Mods:LoadingMods">Mods:LoadingMods</sys:String>
     <sys:String x:Key="Mods:FinishedLoadingMods">Mods:FinishedLoadingMods</sys:String>
     <sys:String x:Key="Mods:NoMods">Mods:NoMods</sys:String>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,6 +31,7 @@ namespace ModAssistant.Pages
         public static List<Mod> InstalledMods = new List<Mod>();
         public static List<Mod> ManifestsToMatch = new List<Mod>();
         public List<string> CategoryNames = new List<string>();
+        public static List<string> MissingOldMods = new List<string>();
         public CollectionView view;
         public bool PendingChanges;
 
@@ -124,6 +126,31 @@ namespace ModAssistant.Pages
                     DescriptionColumn.Width = 800;
                 }
 
+                string lastModdedVersion = CheckPreviousInstallDirs();
+                if (lastModdedVersion != null &&
+                    !DirectoryContainsMods(Path.Combine(App.BeatSaberInstallDirectory, "Plugins")) &&
+                    !DirectoryContainsMods(Path.Combine(App.BeatSaberInstallDirectory, "IPA/Pending/Plugins")))
+                {
+                    string body = (string)FindResource("Mods:GameUpdatedPrompt:OkCancel");
+                    string title = (string)FindResource("Mods:GameUpdatedPrompt:Title");
+
+                    var reinstallMods = System.Windows.Forms.MessageBox.Show(body, title, MessageBoxButtons.OKCancel) == DialogResult.OK;
+                    if (reinstallMods) {
+                        MainWindow.Instance.MainText = $"{FindResource("Mods:CheckingPreviousMods")}...";
+                        await Task.Run(async () => await SelectPreviousMods(lastModdedVersion));
+                        InstalledColumn.Width = double.NaN;
+                        UninstallColumn.Width = 70;
+                        DescriptionColumn.Width = 750;
+                        if (MissingOldMods.Count > 0) {
+                            string notSelectedTitle = string.Format((string)FindResource("Mods:FailedToSelect:Title"), MissingOldMods.Count);
+                            string notSelectedBody1 = (string)FindResource("Mods:FailedToSelect:Body1");
+                            string notSelectedBody2 = (string)FindResource("Mods:FailedToSelect:Body2");
+
+                            System.Windows.Forms.MessageBox.Show($"{notSelectedBody1}\n{string.Join(",\n", MissingOldMods)}\n\n{notSelectedBody2}", notSelectedTitle, MessageBoxButtons.OK);
+                        }
+                    }
+                }
+
                 MainWindow.Instance.MainText = $"{FindResource("Mods:LoadingMods")}...";
                 await Task.Run(async () => await PopulateModsList());
 
@@ -190,6 +217,15 @@ namespace ModAssistant.Pages
             CheckInstallDir("Libs");
         }
 
+        public async Task SelectPreviousMods(string previousModsDirectory)
+        {
+            if(AllModsList == null) await GetAllMods();
+
+            CheckInstallDir(previousModsDirectory, true);
+            CheckInstallDir("Libs");
+            //CheckPreviousInstallDirs();
+        }
+
         public async Task GetAllMods()
         {
             var resp = await HttpClient.GetAsync(Utils.Constants.BeatModsAPIUrl + "mod");
@@ -206,7 +242,52 @@ namespace ModAssistant.Pages
             }
         }
 
-        private void CheckInstallDir(string directory)
+        private SemVersion SemverForPluginFolder(string directory)
+        {
+            string versionString = directory.Substring(directory.LastIndexOf("Old") + 3, directory.Length - directory.LastIndexOf("Plugins")).Trim();
+            SemVersion semver;
+            if (!SemVersion.TryParse(versionString, out semver)) return null;
+            return semver;
+        }
+
+        private int CompareInstallDirs(string a, string b)
+        {
+            SemVersion semverA = SemverForPluginFolder(a);
+            SemVersion semverB = SemverForPluginFolder(b);
+            if (semverA == null) return 1;
+            else if(semverB == null) return 0;
+
+            return semverB.CompareTo(semverA);
+        }
+
+        private bool DirectoryContainsMods(string directory)
+        {
+            if (Directory.Exists(directory))
+            {
+                foreach (string file in Directory.GetFileSystemEntries(Path.Combine(App.BeatSaberInstallDirectory, directory)))
+                {
+                    string fileExtension = Path.GetExtension(file);
+
+                    if (File.Exists(file) && (fileExtension == ".dll" || fileExtension == ".manifest")) return true;
+                }
+            }
+            return false;
+        }
+
+        private string CheckPreviousInstallDirs()
+        {
+            if (!Directory.Exists(App.BeatSaberInstallDirectory)) return null;
+
+            string[] directories = Directory.GetDirectories(App.BeatSaberInstallDirectory, "Old*Plugins");
+            if (directories.Length == 0) return null;
+            Array.Sort(directories, CompareInstallDirs);
+
+            foreach(string directory in directories) if (DirectoryContainsMods(directory)) return directory;
+
+            return null;
+        }
+
+        private void CheckInstallDir(string directory, bool setFailedMods = false)
         {
             if (!Directory.Exists(Path.Combine(App.BeatSaberInstallDirectory, directory)))
             {
@@ -241,6 +322,12 @@ namespace ModAssistant.Pages
                             AddDetectedMod(mod);
                         }
                     }
+                    else if (setFailedMods)
+                    {
+                        string fileName = Path.GetFileNameWithoutExtension(file);
+                        if (!MissingOldMods.Contains(fileName)) MissingOldMods.Add(fileName);
+                        // maybe hook into the manifest to get the actual name. too lazy for now.
+                    }
                 }
             }
         }
@@ -274,7 +361,7 @@ namespace ModAssistant.Pages
             if (!InstalledMods.Contains(mod))
             {
                 InstalledMods.Add(mod);
-                if (App.SelectInstalledMods && !DefaultMods.Contains(mod.name))
+                if (!DefaultMods.Contains(mod.name))
                 {
                     DefaultMods.Add(mod.name);
                 }
