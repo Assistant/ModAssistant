@@ -186,8 +186,10 @@ namespace ModAssistant.Pages
             GetBSIPAVersion();
             CheckInstallDir("IPA/Pending/Plugins");
             CheckInstallDir("IPA/Pending/Libs");
+            CheckInstallDir("IPA/Pending/Libs/Native");
             CheckInstallDir("Plugins");
             CheckInstallDir("Libs");
+            CheckInstallDir("Libs/Native");
         }
 
         public async Task GetAllMods()
