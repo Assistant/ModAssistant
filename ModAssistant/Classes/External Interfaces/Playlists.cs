@@ -24,7 +24,7 @@ namespace ModAssistant.API
             switch (uri.Host)
             {
                 case "playlist":
-                    Uri url = new Uri($"{uri.LocalPath.Trim('/')}");
+                    Uri url = new Uri($"{uri.PathAndQuery.Trim('/')}");
                     string filename = await Get(url);
                     await DownloadFrom(filename);
                     break;
