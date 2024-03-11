@@ -19,6 +19,7 @@ namespace ModAssistant
         public static bool ModsOpened = false;
         public static bool ModsLoading = false;
         public static string GameVersion;
+        public static string GameVersionDetected;  // the real game version detected from the game
         public static string GameVersionOverride;
         public TaskCompletionSource<bool> VersionLoadStatus = new TaskCompletionSource<bool>();
 
@@ -123,6 +124,7 @@ namespace ModAssistant
                 Dictionary<string, string[]> aliases = JsonSerializer.Deserialize<Dictionary<string, string[]>>(body);
 
                 string version = Utils.GetVersion();
+                GameVersionDetected = version;
                 if (!versions.Contains(version) && CheckAliases(versions, aliases, version) == string.Empty)
                 {
                     versions.Insert(0, version);
@@ -275,7 +277,22 @@ namespace ModAssistant
 
         private void InstallButton_Click(object sender, RoutedEventArgs e)
         {
-            Mods.Instance.InstallMods();
+            if (string.IsNullOrEmpty(GameVersionOverride) // game version not listed in aliases at all
+                && GameVersion != GameVersionDetected) // and the user manually selected a version
+            {
+                // show a waring about the version mismatch
+                var result = MessageBox.Show(String.Format((string) Application.Current.FindResource("MainWindow:GameVersionMismatch"), GameVersion, GameVersionDetected),
+                    (string)Application.Current.FindResource("MainWindow:GameVersionMismatchTitle"), MessageBoxButton.OKCancel);
+
+                if (result == MessageBoxResult.OK)
+                {
+                    Mods.Instance.InstallMods();
+                }
+            }
+            else
+            {
+                Mods.Instance.InstallMods();
+            }
         }
 
         private void InfoButton_Click(object sender, RoutedEventArgs e)

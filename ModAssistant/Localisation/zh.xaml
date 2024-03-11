@@ -30,6 +30,9 @@
     <sys:String x:Key="MainWindow:GameUpdateDialog:Line2">请仔细检查左下角是否选择了正确的游戏版本！</sys:String>
     <sys:String x:Key="MainWindow:NoModSelected">没有选择Mod！</sys:String>
     <sys:String x:Key="MainWindow:NoModInfoPage">{0}没有信息页。</sys:String>
+    <sys:String x:Key="MainWindow:GameVersionMismatch" xml:space="preserve">您选择的游戏版本 {0} 与当前检测到的游戏版本 {1} 不匹配，是否要继续安装Mod？
+警告：继续安装Mod可能会破坏你的游戏，Mod需要匹配游戏版本，否则会出错。</sys:String>
+    <sys:String x:Key="MainWindow:GameVersionMismatchTitle">警告：游戏版本不匹配</sys:String>
 
     <!-- Intro Page -->
     <sys:String x:Key="Intro:Title">简介</sys:String>
@@ -236,7 +239,7 @@
     <sys:String x:Key="OneClick:DoneNotify">OneClick™ 安装完毕</sys:String>
     <sys:String x:Key="OneClick:StartDownloadPlaylist">开始下载歌曲列表</sys:String>
     <sys:String x:Key="OneClick:Done">执行完毕</sys:String>
-    
+
     <!-- Themes Class -->
     <sys:String x:Key="Themes:ThemeNotFound">找不到主题，恢复为默认主题...</sys:String>
     <sys:String x:Key="Themes:ThemeSet">主题设置为{0}.</sys:String>
